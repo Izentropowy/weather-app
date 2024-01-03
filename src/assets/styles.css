@@ -1,0 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@1&family=Roboto:wght@500&display=swap");
+
+:root {
+  --font-color: white;
+  --main-color: #352f44;
+  --secondary-color: #5c5470;
+  --third-color: #dbd8e3;
+  --mrg: 1rem;
+  --pdg-v: 0.5rem;
+  --pdg-h: 1rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: "Roboto", sans-serif;
+  color: var(--font-color);
+  /* background: url(/src/assets/images/todoimg.jpg); */
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+button {
+  cursor: pointer;
+  padding: var(--pdg-v) var(--pdg-h);
+  background-color: transparent;
+  border: none;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+button:active {
+  transform: scale(0.9);
+}

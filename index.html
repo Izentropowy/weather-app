@@ -6,21 +6,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Title</title>
     <script src="main.js" defer></script>
+    <script src="https://kit.fontawesome.com/5c143763a7.js" crossorigin="anonymous"></script>
   </head>
   <body>
-    <div class="location-div">
-      <label for="location"></label>
-      <input type="text" id="location" name="location" placeholder="Search location..."><br><br>
+    <div class="left">
+      <div class="result-window">
+        <i class="fa-solid fa-droplet"></i>
+        <div class="humidity">
+          <h6>Humidity</h6>
+          <h3>Value</h3>
+        </div>
+      </div>
+      <div class="result-window">
+        <i class="fa-solid fa-arrows-down-to-line"></i>
+        <div class="pressure">
+          <h6>Pressure</h6>
+          <h3>Value</h3>
+        </div>
+      </div>
     </div>
-    <div class="results">
-      <div class="location">
-        <span>test</span>
+    <div class="mid">
+      <div class="search">
+        <input type="text" id="location" name="location" placeholder="Search location...">
+        <button><i class="fa fa-search"></i></button>
       </div>
-      <div class="temperature">
-        <span>test</span>
+      <div class="result-window">
+        <i class="fa-solid fa-location-dot"></i>
+        <div class="location">
+          <h6>Location</h6>
+          <h3>Value</h3>
+        </div>
       </div>
-      <div class="wind">
-        <span>test</span>
+      <div class="result-window">
+        <i class="fa-solid fa-temperature-three-quarters"></i>
+        <div class="Temperature">
+          <h6>Temperature</h6>
+          <h3>Value</h3>
+        </div>
+      </div>
+      <div class="result-window">
+        <i class="fa-solid fa-cloud"></i>
+        <div class="clouds">
+          <h6>Clouds</h6>
+          <h3>Value</h3>
+        </div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="result-window">
+        <i class="fa-solid fa-wind"></i>
+        <div class="Wind">
+          <h6>Wind</h6>
+          <h3>Value</h3>
+        </div>
+      </div>
+      <div class="result-window">
+        <i class="fa-solid fa-eye"></i>
+        <div class="visibility">
+          <h6>Visibility</h6>
+          <h3>Value</h3>
+        </div>
+      </div>
+    </div>
+    <div class="bottom">
+      <button class="daily">Daily</button>
+      <button class="hourly">Hourly</button>
+      <div class="forecast-results">
+        <div class="forecast-result-window">
+          <h6>Visibility</h6>
+          <h3>Value</h3>
+        </div>
+        <div class="forecast-result-window">
+          <h6>Visibility</h6>
+          <h3>Value</h3>
+        </div>
+        <div class="forecast-result-window">
+          <h6>Visibility</h6>
+          <h3>Value</h3>
+        </div>
       </div>
     </div>
   </body>

@@ -11,11 +11,18 @@ const visibilityValue = document.querySelector(".visibility-value");
 const input = document.querySelector("input");
 const submit = document.querySelector(".fa-search");
 const cloudIcon = document.querySelector(".weather-icon");
+const forecastResults = document.querySelector(".forecast-results");
 
 function handleError(error) {
   console.error(error);
   const message = "Location not found";
   locationValue.textContent = message;
+  humidityValue.textContent = "-";
+  pressureValue.textContent = "-";
+  temperatureValue.textContent = "-";
+  cloudsValue.textContent = "-";
+  windValue.textContent = "-";
+  visibilityValue.textContent = "-";
 }
 
 function displayHumidity(humidity) {
@@ -45,12 +52,55 @@ async function displayClouds(clouds) {
   cloudIcon.appendChild(img);
 }
 
+async function createForecastedClouds(clouds) {
+  const { url } = await fetch(clouds.icon, { mode: "cors" });
+  const img = document.createElement("img");
+  img.src = url;
+  return img;
+}
+
 function displayWind(wind) {
   windValue.textContent = `${wind} kph`;
 }
 
 function displayVisibility(visibility) {
   visibilityValue.textContent = `${visibility} km`;
+}
+
+function createForecastDiv(day, tempDay, tempNight, img) {
+  const forecastDiv = document.createElement("div");
+  forecastDiv.classList.add("forecast-result-window");
+  forecastDiv.innerHTML = `
+    <h3 class="day">${day}</h3>
+    <br>
+    <h4 class="day-temp">${tempDay} &deg;C</h4>
+    <h6 class="night-temp">${tempNight} &deg;C</h6>
+    <br>
+    <div class="day-icon">${img}</div>`;
+  return forecastDiv;
+}
+
+function displayForecastedDays(forecast) {
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+
+  forecast.forEach((row) => {
+    createForecastedClouds(row.day.condition).then((img) => {
+      console.log(img);
+      const day = days[new Date(row.date_epoch * 1000).getDay()];
+      const tempDay = row.day.maxtemp_c;
+      const tempNight = row.day.mintemp_c;
+      const forecastDiv = createForecastDiv(day, tempDay, tempNight, img);
+      forecastResults.appendChild(forecastDiv);
+    });
+  });
 }
 
 export default function displayWeather(place) {
@@ -65,6 +115,8 @@ export default function displayWeather(place) {
       displayClouds(result.clouds);
       displayWind(result.wind);
       displayVisibility(result.visibility);
+      displayForecastedDays(result.forecast);
+      console.log("dupa");
     })
     .catch((error) => {
       handleError(error);

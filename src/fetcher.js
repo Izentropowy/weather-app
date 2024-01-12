@@ -1,4 +1,4 @@
-export default async function getWeather(place) {
+export async function getWeather(place) {
   const url = `http://api.weatherapi.com/v1/forecast.json?key=8dfe581ca0ab4c4ea61100418232212&q=${place}&days=3&aqi=no`;
 
   try {
@@ -26,6 +26,28 @@ export default async function getWeather(place) {
     return valuesRequired;
   } catch (error) {
     console.error("Error fetching weather data:", error);
+    throw error;
+  }
+}
+
+export async function getCurrentWeatherIcon(weather) {
+  const url = weather.clouds.icon;
+  try {
+    const response = await fetch(url, { mode: "cors" });
+    return response.url;
+  } catch (error) {
+    console.error("Error fetching current weather icon:", error);
+    throw error;
+  }
+}
+
+export async function getForecastedWeatherIcon(forecast) {
+  const url = forecast.day.condition.icon;
+  try {
+    const response = await fetch(url, { mode: "cors" });
+    return response.url;
+  } catch (error) {
+    console.error("Error fetching forecast weather icon:", error);
     throw error;
   }
 }

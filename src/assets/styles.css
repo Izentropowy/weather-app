@@ -45,8 +45,12 @@ button:active {
   transform: scale(0.9);
 }
 
-img {
-  min-height: 100px;
+.weather-icon > img {
+  min-height: 125px;
+}
+
+.forecast-icon > img {
+  max-height: 40px;
 }
 
 /* layout */

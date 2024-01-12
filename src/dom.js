@@ -1,4 +1,8 @@
-import getWeather from "./fetcher";
+import {
+  getWeather,
+  getCurrentWeatherIcon,
+  getForecastedWeatherIcon,
+} from "./fetcher";
 
 const humidityValue = document.querySelector(".humidity-value");
 const pressureValue = document.querySelector(".pressure-value");
@@ -42,14 +46,8 @@ function displayTemperature(temperature) {
   temperatureValue.innerHTML = `${temperature} &deg;C`;
 }
 
-async function displayClouds(clouds) {
-  const { url } = await fetch(clouds.icon, { mode: "cors" });
-
-  const img = document.createElement("img");
-  img.src = url;
+function displayClouds(clouds) {
   cloudsValue.textContent = clouds.text;
-  cloudIcon.innerHTML = "";
-  cloudIcon.appendChild(img);
 }
 
 async function createForecastedClouds(clouds) {
@@ -67,7 +65,7 @@ function displayVisibility(visibility) {
   visibilityValue.textContent = `${visibility} km`;
 }
 
-function createForecastDiv(day, tempDay, tempNight, img) {
+function createForecastDiv(day, tempDay, tempNight, row) {
   const forecastDiv = document.createElement("div");
   forecastDiv.classList.add("forecast-result-window");
   forecastDiv.innerHTML = `
@@ -76,8 +74,15 @@ function createForecastDiv(day, tempDay, tempNight, img) {
     <h4 class="day-temp">${tempDay} &deg;C</h4>
     <h6 class="night-temp">${tempNight} &deg;C</h6>
     <br>
-    <div class="day-icon">${img}</div>`;
+    <div class="forecast-icon day-icon-${row}"></div>`;
   return forecastDiv;
+}
+
+function displayCurrentWeatherIcon(url) {
+  const img = document.createElement("img");
+  img.src = url;
+  cloudIcon.innerHTML = "";
+  cloudIcon.appendChild(img);
 }
 
 function displayForecastedDays(forecast) {
@@ -91,23 +96,27 @@ function displayForecastedDays(forecast) {
     "Saturday",
   ];
 
-  forecast.forEach((row) => {
-    createForecastedClouds(row.day.condition).then((img) => {
-      console.log(img);
-      const day = days[new Date(row.date_epoch * 1000).getDay()];
-      const tempDay = row.day.maxtemp_c;
-      const tempNight = row.day.mintemp_c;
-      const forecastDiv = createForecastDiv(day, tempDay, tempNight, img);
-      forecastResults.appendChild(forecastDiv);
-    });
+  forecast.forEach((row, index) => {
+    const day = days[new Date(row.date_epoch * 1000).getDay()];
+    const tempDay = row.day.maxtemp_c;
+    const tempNight = row.day.mintemp_c;
+    const forecastDiv = createForecastDiv(day, tempDay, tempNight, index);
+    forecastResults.appendChild(forecastDiv);
   });
+}
+
+function displayForecastedWeatherIcon(url, index) {
+  const img = document.createElement("img");
+  img.src = url;
+  document.querySelector(`.day-icon-${index}`).innerHTML = "";
+  document.querySelector(`.day-icon-${index}`).appendChild(img);
 }
 
 export default function displayWeather(place) {
   getWeather(place)
     .then((result) => {
       console.log(result);
-
+      getCurrentWeatherIcon(result);
       displayHumidity(result.humidity);
       displayPressure(result.pressure);
       displayLocation(result.city, result.country, result.localtime);
@@ -116,7 +125,14 @@ export default function displayWeather(place) {
       displayWind(result.wind);
       displayVisibility(result.visibility);
       displayForecastedDays(result.forecast);
-      console.log("dupa");
+      getCurrentWeatherIcon(result).then((url) => {
+        displayCurrentWeatherIcon(url);
+      });
+      result.forecast.forEach((row, index) => {
+        getForecastedWeatherIcon(row).then((url) => {
+          displayForecastedWeatherIcon(url, index);
+        });
+      });
     })
     .catch((error) => {
       handleError(error);

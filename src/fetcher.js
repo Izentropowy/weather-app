@@ -3,12 +3,7 @@ export async function getWeather(place) {
 
   try {
     const response = await fetch(url, { mode: "cors" });
-    const weather = await response.json();
-    console.log(weather);
-
-    const location = weather.location;
-    const current = weather.current;
-    const forecast = weather.forecast;
+    const { location, current, forecast } = await response.json();
 
     const valuesRequired = {
       humidity: current.humidity,
@@ -41,8 +36,7 @@ export async function getCurrentWeatherIcon(weather) {
   }
 }
 
-export async function getForecastedWeatherIcon(forecast) {
-  const url = forecast.day.condition.icon;
+export async function getForecastedWeatherIcon(url) {
   try {
     const response = await fetch(url, { mode: "cors" });
     return response.url;

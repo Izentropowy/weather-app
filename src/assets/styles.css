@@ -57,7 +57,7 @@ button:active {
 body {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;;
+  grid-template-rows: 1fr 1fr 1fr;
 }
 
 /* left */
@@ -88,6 +88,7 @@ body {
 .bottom {
   grid-row: 3 / 4;
   grid-column: 1 / 4;
+  align-self: flex-end;
 }
 
 .left, .mid, .right {
@@ -112,6 +113,10 @@ body {
 .top {
   display: grid;
   place-items: center;
+}
+
+.search {
+  display: flex;
 }
 
 .fa-solid {
@@ -146,7 +151,6 @@ input:focus {
 }
 
 .forecast-results {
-  margin-top: calc(5 * var(--mrg));
   display: flex;
   justify-content: space-around;
 }

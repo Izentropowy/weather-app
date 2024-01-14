@@ -16,6 +16,8 @@ const input = document.querySelector("input");
 const submit = document.querySelector(".fa-search");
 const cloudIcon = document.querySelector(".weather-icon");
 const forecastResults = document.querySelector(".forecast-results");
+const daily = document.querySelector(".daily");
+const hourly = document.querySelector(".hourly");
 
 function handleError(error) {
   console.error(error);
@@ -27,6 +29,7 @@ function handleError(error) {
   cloudsValue.textContent = "-";
   windValue.textContent = "-";
   visibilityValue.textContent = "-";
+  forecastResults.innerHTML = "";
 }
 
 function displayHumidity(humidity) {
@@ -48,13 +51,6 @@ function displayTemperature(temperature) {
 
 function displayClouds(clouds) {
   cloudsValue.textContent = clouds.text;
-}
-
-async function createForecastedClouds(clouds) {
-  const { url } = await fetch(clouds.icon, { mode: "cors" });
-  const img = document.createElement("img");
-  img.src = url;
-  return img;
 }
 
 function displayWind(wind) {
@@ -96,6 +92,8 @@ function displayForecastedDays(forecast) {
     "Saturday",
   ];
 
+  forecastResults.innerHTML = "";
+
   forecast.forEach((row, index) => {
     const day = days[new Date(row.date_epoch * 1000).getDay()];
     const tempDay = row.day.maxtemp_c;
@@ -112,10 +110,43 @@ function displayForecastedWeatherIcon(url, index) {
   document.querySelector(`.day-icon-${index}`).appendChild(img);
 }
 
+async function displayDaily(forecast) {
+  displayForecastedDays(forecast);
+
+  forecast.forEach((row, index) => {
+    const url = row.day.condition.icon;
+    getForecastedWeatherIcon(url).then((newUrl) => {
+      displayForecastedWeatherIcon(newUrl, index);
+    });
+  });
+}
+
+function displayHourly(forecast) {
+  forecastResults.innerHTML = "";
+  for (let i = 0; i < forecast.length; i += 4) {
+    const epoch = forecast[i].time_epoch;
+    const hour = new Date(epoch * 1000).getHours();
+    const time = `${hour} : 00`;
+    const temp = forecast[i].temp_c;
+    const forecastDiv = createForecastDiv(time, temp, "", i);
+    forecastResults.appendChild(forecastDiv);
+    document.querySelectorAll(".night-temp").forEach((element) => {
+      // eslint-disable-next-line no-param-reassign
+      element.textContent = "h";
+    });
+    const url = forecast[i].condition.icon;
+    console.log(forecast[i]);
+    getForecastedWeatherIcon(url).then((newUrl) => {
+      displayForecastedWeatherIcon(newUrl, i);
+    });
+  }
+}
+
+let forecastFetched;
 export default function displayWeather(place) {
   getWeather(place)
     .then((result) => {
-      console.log(result);
+      forecastFetched = result.forecast;
       getCurrentWeatherIcon(result);
       displayHumidity(result.humidity);
       displayPressure(result.pressure);
@@ -124,15 +155,10 @@ export default function displayWeather(place) {
       displayClouds(result.clouds);
       displayWind(result.wind);
       displayVisibility(result.visibility);
-      displayForecastedDays(result.forecast);
       getCurrentWeatherIcon(result).then((url) => {
         displayCurrentWeatherIcon(url);
       });
-      result.forecast.forEach((row, index) => {
-        getForecastedWeatherIcon(row).then((url) => {
-          displayForecastedWeatherIcon(url, index);
-        });
-      });
+      displayDaily(result.forecast);
     })
     .catch((error) => {
       handleError(error);
@@ -140,3 +166,5 @@ export default function displayWeather(place) {
 }
 
 submit.addEventListener("click", () => displayWeather(input.value));
+daily.addEventListener("click", () => displayDaily(forecastFetched));
+hourly.addEventListener("click", () => displayHourly(forecastFetched[0].hour));

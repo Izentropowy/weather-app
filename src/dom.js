@@ -132,10 +132,9 @@ function displayHourly(forecast) {
     forecastResults.appendChild(forecastDiv);
     document.querySelectorAll(".night-temp").forEach((element) => {
       // eslint-disable-next-line no-param-reassign
-      element.textContent = "h";
+      element.innerHTML = "&nbsp;";
     });
     const url = forecast[i].condition.icon;
-    console.log(forecast[i]);
     getForecastedWeatherIcon(url).then((newUrl) => {
       displayForecastedWeatherIcon(newUrl, i);
     });

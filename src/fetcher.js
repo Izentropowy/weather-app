@@ -1,5 +1,5 @@
 export async function getWeather(place) {
-  const url = `http://api.weatherapi.com/v1/forecast.json?key=8dfe581ca0ab4c4ea61100418232212&q=${place}&days=3&aqi=no`;
+  const url = `https://api.weatherapi.com/v1/forecast.json?key=8dfe581ca0ab4c4ea61100418232212&q=${place}&days=3&aqi=no`;
 
   try {
     const response = await fetch(url, { mode: "cors" });
